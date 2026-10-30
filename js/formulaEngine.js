@@ -34,7 +34,30 @@ class FormulaEngine {
         const computableExpr = formula.computable[targetVar];
         if (!computableExpr) throw new Error("Não é possível calcular " + targetVar + " nesta fórmula.");
 
-        const scope = {};
+        const scope = {
+            g: 9.8,
+            G: 6.674e-11,
+            c: 3.00e8,
+            e: 1.602e-19,
+            ke: 8.99e9,
+            Rg: 8.314,
+            kB: 1.381e-23,
+            h: 6.626e-34,
+            eps0: 8.854e-12,
+            mu0: 1.257e-6,
+            sigma: 5.670e-8,
+            I0: 1e-12,
+            polyval: function(coefs, exps, x) {
+                let sum = 0;
+                for(let i=0; i<coefs.length; i++) {
+                    sum += coefs[i] * Math.pow(x, exps[i]);
+                }
+                return sum;
+            },
+            sum_inv: function(arr) {
+                return arr.reduce((acc, val) => acc + (1 / val), 0);
+            }
+        };
         for (const [varName, data] of Object.entries(inputs)) {
             const varDef = formula.variables[varName];
             if (!varDef) continue;
