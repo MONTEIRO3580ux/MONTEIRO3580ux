@@ -6,6 +6,124 @@ const mathCatalog = [
     // FUNÇÕES
     // ============================================================
     {
+        id: "polynomial_function",
+        name: "Função Polinomial",
+        category: "Matemática: Funções",
+        type: "DYNAMIC_LIST",
+        listVariable: "termos",
+        itemFields: ["a", "n"],
+        targetVariable: "y",
+        latex: "f(x) = a_n x^n + a_{n-1} x^{n-1} + \\dots + a_0",
+        computable: {
+            "y": "polyval(termos.map(t => t.a), termos.map(t => t.n), x)"
+        },
+        variables: {
+            "y": { name: "f(x) / y", si_unit: "" },
+            "x": { name: "Variável (x)", si_unit: "" },
+            "termos": { name: "Termos", si_unit: "" }
+        },
+        description: "Avaliação de polinômio para um dado x."
+    },
+    {
+        id: "quadratic_function",
+        name: "Função Quadrática (2º Grau)",
+        category: "Matemática: Funções",
+        latex: "f(x) = ax^2 + bx + c",
+        computable: {
+            "y": "a * x^2 + b * x + c",
+            "c": "y - a * x^2 - b * x"
+        },
+        variables: {
+            "y": { name: "f(x) / y", si_unit: "" },
+            "a": { name: "Coeficiente a", si_unit: "" },
+            "b": { name: "Coeficiente b", si_unit: "" },
+            "c": { name: "Coeficiente c", si_unit: "" },
+            "x": { name: "Variável x", si_unit: "" }
+        },
+        constraints: ["a != 0"],
+        description: "Valor de y dado x na parábola."
+    },
+    {
+        id: "quadratic_root_plus",
+        name: "Raiz da Quadrática (+)",
+        category: "Matemática: Funções",
+        latex: "x_1 = \\frac{-b + \\sqrt{\\Delta}}{2a}",
+        computable: {
+            "x1": "(-b + sqrt(delta)) / (2 * a)"
+        },
+        variables: {
+            "x1": { name: "Raiz 1 (x₁)", si_unit: "" },
+            "b": { name: "Coeficiente b", si_unit: "" },
+            "delta": { name: "Discriminante (Δ)", si_unit: "" },
+            "a": { name: "Coeficiente a", si_unit: "" }
+        },
+        constraints: ["a != 0", "delta >= 0"],
+        description: "Primeira raiz da equação quadrática."
+    },
+    {
+        id: "quadratic_root_minus",
+        name: "Raiz da Quadrática (-)",
+        category: "Matemática: Funções",
+        latex: "x_2 = \\frac{-b - \\sqrt{\\Delta}}{2a}",
+        computable: {
+            "x2": "(-b - sqrt(delta)) / (2 * a)"
+        },
+        variables: {
+            "x2": { name: "Raiz 2 (x₂)", si_unit: "" },
+            "b": { name: "Coeficiente b", si_unit: "" },
+            "delta": { name: "Discriminante (Δ)", si_unit: "" },
+            "a": { name: "Coeficiente a", si_unit: "" }
+        },
+        constraints: ["a != 0", "delta >= 0"],
+        description: "Segunda raiz da equação quadrática."
+    },
+    {
+        id: "modular_function",
+        name: "Função Modular",
+        category: "Matemática: Funções",
+        latex: "f(x) = |x|",
+        computable: {
+            "y": "abs(x)"
+        },
+        variables: {
+            "y": { name: "f(x) / y", si_unit: "" },
+            "x": { name: "Variável x", si_unit: "" }
+        },
+        description: "Módulo ou valor absoluto."
+    },
+    {
+        id: "trig_sin_func",
+        name: "Função Seno",
+        category: "Matemática: Funções",
+        latex: "f(x) = \\sin(x)",
+        computable: {
+            "y": "sin(x)",
+            "x": "asin(y)"
+        },
+        variables: {
+            "y": { name: "f(x) / y", si_unit: "" },
+            "x": { name: "Ângulo (rad)", si_unit: "rad" }
+        },
+        constraints: ["y >= -1", "y <= 1"],
+        description: "Seno de um ângulo."
+    },
+    {
+        id: "trig_cos_func",
+        name: "Função Cosseno",
+        category: "Matemática: Funções",
+        latex: "f(x) = \\cos(x)",
+        computable: {
+            "y": "cos(x)",
+            "x": "acos(y)"
+        },
+        variables: {
+            "y": { name: "f(x) / y", si_unit: "" },
+            "x": { name: "Ângulo (rad)", si_unit: "rad" }
+        },
+        constraints: ["y >= -1", "y <= 1"],
+        description: "Cosseno de um ângulo."
+    },
+    {
         id: "affine_function",
         name: "Função Afim (1º Grau)",
         category: "Matemática: Funções",
@@ -142,6 +260,7 @@ const mathCatalog = [
         id: "pa_sum",
         name: "PA — Soma dos Termos",
         category: "Matemática: Progressões",
+        type: "DYNAMIC_STRUCTURE",
         latex: "S_n = \\frac{(a_1 + a_n) \\cdot n}{2}",
         computable: {
             "Sn": "((a1 + an) * n) / 2",
@@ -181,6 +300,7 @@ const mathCatalog = [
         id: "pg_sum_finite",
         name: "PG — Soma Finita",
         category: "Matemática: Progressões",
+        type: "DYNAMIC_STRUCTURE",
         latex: "S_n = \\frac{a_1 (q^n - 1)}{q - 1}",
         computable: {
             "Sn": "(a1 * (q^n - 1)) / (q - 1)",
@@ -672,36 +792,57 @@ const mathCatalog = [
     // ============================================================
     {
         id: "arithmetic_mean",
-        name: "Média Aritmética (2 valores)",
+        name: "Média Aritmética",
         category: "Matemática: Estatística",
-        latex: "\\mu = \\frac{x_1 + x_2}{2}",
+        type: "DYNAMIC_LIST",
+        listVariable: "valores",
+        itemFields: ["x"],
+        targetVariable: "media",
+        latex: "MA = \\frac{\\Sigma x}{n}",
         computable: {
-            "mu": "(x1 + x2) / 2",
-            "x1": "2 * mu - x2",
-            "x2": "2 * mu - x1"
+            "media": "mean(valores)"
         },
         variables: {
-            "mu": { name: "Média", si_unit: "" },
-            "x1": { name: "Valor 1", si_unit: "" },
-            "x2": { name: "Valor 2", si_unit: "" }
+            "media": { name: "Média Aritmética", si_unit: "" },
+            "valores": { name: "Valores (x)", si_unit: "" }
         },
-        description: "Média aritmética simples de dois valores."
+        description: "Média aritmética simples de n valores."
+    },
+    {
+        id: "variance",
+        name: "Variância (Amostral)",
+        category: "Matemática: Estatística",
+        type: "DYNAMIC_LIST",
+        listVariable: "valores",
+        itemFields: ["x"],
+        targetVariable: "var",
+        latex: "V = \\frac{\\Sigma (x_i - MA)^2}{n - 1}",
+        computable: {
+            "var": "variance(valores)"
+        },
+        variables: {
+            "var": { name: "Variância (V)", si_unit: "" },
+            "valores": { name: "Valores (x)", si_unit: "" }
+        },
+        description: "Variância de uma lista de valores."
     },
     {
         id: "std_deviation",
-        name: "Desvio Padrão (a partir da Variância)",
+        name: "Desvio Padrão",
         category: "Matemática: Estatística",
+        type: "DYNAMIC_LIST",
+        listVariable: "valores",
+        itemFields: ["x"],
+        targetVariable: "dp",
         latex: "DP = \\sqrt{V}",
         computable: {
-            "DP": "sqrt(V)",
-            "V": "DP^2"
+            "dp": "std(valores)"
         },
         variables: {
-            "DP": { name: "Desvio Padrão (DP)", si_unit: "" },
-            "V": { name: "Variância (V)", si_unit: "" }
+            "dp": { name: "Desvio Padrão (DP)", si_unit: "" },
+            "valores": { name: "Valores (x)", si_unit: "" }
         },
-        constraints: ["V >= 0"],
-        description: "Relação direta entre desvio padrão e variância."
+        description: "Desvio padrão estatístico."
     },
     {
         id: "percentage_change",
@@ -948,6 +1089,659 @@ const mathCatalog = [
         },
         constraints: ["rho >= 0"],
         description: "Módulo de z = a + bi no plano de Argand-Gauss."
+    },
+    // ============================================================
+    // MATEMÁTICA FINANCEIRA
+    // ============================================================
+    {
+        id: "simple_interest",
+        name: "Juros Simples",
+        category: "Matemática: Financeira",
+        latex: "J = C \\cdot i \\cdot t",
+        computable: {
+            "J": "C * i * t",
+            "C": "J / (i * t)",
+            "i": "J / (C * t)",
+            "t": "J / (C * i)"
+        },
+        variables: {
+            "J": { name: "Juros (J)", si_unit: "$" },
+            "C": { name: "Capital (C)", si_unit: "$" },
+            "i": { name: "Taxa (i decimal)", si_unit: "" },
+            "t": { name: "Tempo (t)", si_unit: "" }
+        },
+        description: "Cálculo de juros simples."
+    },
+    {
+        id: "compound_interest",
+        name: "Juros Compostos (Montante)",
+        category: "Matemática: Financeira",
+        latex: "M = C(1 + i)^t",
+        computable: {
+            "M": "C * (1 + i)^t",
+            "C": "M / (1 + i)^t",
+            "t": "log(M / C) / log(1 + i)",
+            "i": "(M / C)^(1 / t) - 1"
+        },
+        variables: {
+            "M": { name: "Montante (M)", si_unit: "$" },
+            "C": { name: "Capital (C)", si_unit: "$" },
+            "i": { name: "Taxa (i decimal)", si_unit: "" },
+            "t": { name: "Tempo (t)", si_unit: "" }
+        },
+        description: "Cálculo de montante com juros compostos."
+    },
+    {
+        id: "thales_theorem",
+        name: "Teorema de Tales",
+        category: "Matemática: Geometria Plana",
+        latex: "\\frac{A}{B} = \\frac{C}{D}",
+        computable: {
+            "A": "(C * B) / D",
+            "B": "(A * D) / C",
+            "C": "(A * D) / B",
+            "D": "(C * B) / A"
+        },
+        variables: {
+            "A": { name: "Segmento A", si_unit: "m" },
+            "B": { name: "Segmento B", si_unit: "m" },
+            "C": { name: "Segmento C", si_unit: "m" },
+            "D": { name: "Segmento D", si_unit: "m" }
+        },
+        description: "Proporção de segmentos retas paralelas cortadas por transversais."
+    },
+    {
+        id: "trig_sec_func",
+        name: "Secante",
+        category: "Matemática: Trigonometria",
+        latex: "\\sec(x) = \\frac{1}{\\cos(x)}",
+        computable: {
+            "sec": "1 / cos(x)",
+            "x": "acos(1 / sec)"
+        },
+        variables: {
+            "sec": { name: "Secante", si_unit: "" },
+            "x": { name: "Ângulo (rad)", si_unit: "rad" }
+        },
+        description: "Função trigonométrica secante."
+    },
+    {
+        id: "trig_csc_func",
+        name: "Cossecante",
+        category: "Matemática: Trigonometria",
+        latex: "\\csc(x) = \\frac{1}{\\sin(x)}",
+        computable: {
+            "csc": "1 / sin(x)",
+            "x": "asin(1 / csc)"
+        },
+        variables: {
+            "csc": { name: "Cossecante", si_unit: "" },
+            "x": { name: "Ângulo (rad)", si_unit: "rad" }
+        },
+        description: "Função trigonométrica cossecante."
+    },
+    {
+        id: "hexagon_inscribed",
+        name: "Hexágono Inscrito",
+        category: "Matemática: Geometria Plana",
+        latex: "L = R",
+        computable: {
+            "L": "R",
+            "R": "L"
+        },
+        variables: {
+            "L": { name: "Lado", si_unit: "m" },
+            "R": { name: "Raio", si_unit: "m" }
+        },
+        description: "Relação do lado do hexágono com o raio."
+    },
+    {
+        id: "pyramid_frustum_volume",
+        name: "Volume do Tronco de Pirâmide",
+        category: "Matemática: Geometria Espacial",
+        type: "FIXED_FORMULA",
+        latex: "V = \\frac{h}{3} (B + b + \\sqrt{B \\cdot b})",
+        computable: {
+            "V": "(h / 3) * (B + b + sqrt(B * b))"
+        },
+        variables: {
+            "V": { name: "Volume", si_unit: "m^3" },
+            "h": { name: "Altura", si_unit: "m" },
+            "B": { name: "Área da base maior", si_unit: "m^2" },
+            "b": { name: "Área da base menor", si_unit: "m^2" }
+        },
+        description: "Volume de um tronco de pirâmide."
+    },
+    {
+        id: "cone_frustum_volume",
+        name: "Volume do Tronco de Cone",
+        category: "Matemática: Geometria Espacial",
+        type: "FIXED_FORMULA",
+        latex: "V = \\frac{\\pi \\cdot h}{3} (R^2 + R \\cdot r + r^2)",
+        computable: {
+            "V": "(pi * h / 3) * (R^2 + R * r + r^2)"
+        },
+        variables: {
+            "V": { name: "Volume", si_unit: "m^3" },
+            "h": { name: "Altura", si_unit: "m" },
+            "R": { name: "Raio maior", si_unit: "m" },
+            "r": { name: "Raio menor", si_unit: "m" }
+        },
+        description: "Volume de um tronco de cone circular."
+    },
+    {
+        id: "ellipse_eq",
+        name: "Equação da Elipse (Eixo Maior X)",
+        category: "Matemática: Geometria Analítica",
+        type: "FIXED_FORMULA",
+        latex: "\\frac{x^2}{a^2} + \\frac{y^2}{b^2} = 1",
+        computable: {
+            "y": "sqrt((1 - (x^2 / a^2)) * b^2)"
+        },
+        variables: {
+            "y": { name: "Coordenada y (+)", si_unit: "" },
+            "x": { name: "Coordenada x", si_unit: "" },
+            "a": { name: "Semieixo a", si_unit: "" },
+            "b": { name: "Semieixo b", si_unit: "" }
+        },
+        description: "Equação reduzida da elipse."
+    },
+    {
+        id: "hyperbola_eq_x",
+        name: "Equação da Hipérbole (Eixo Real X)",
+        category: "Matemática: Geometria Analítica",
+        type: "FIXED_FORMULA",
+        latex: "\\frac{x^2}{a^2} - \\frac{y^2}{b^2} = 1",
+        computable: {
+            "y": "sqrt(((x^2 / a^2) - 1) * b^2)"
+        },
+        variables: {
+            "y": { name: "Coordenada y (+)", si_unit: "" },
+            "x": { name: "Coordenada x", si_unit: "" },
+            "a": { name: "Semieixo real a", si_unit: "" },
+            "b": { name: "Semieixo imag. b", si_unit: "" }
+        },
+        description: "Equação reduzida da hipérbole."
+    },
+    {
+        id: "parabola_eq_x",
+        name: "Equação da Parábola (Eixo X)",
+        category: "Matemática: Geometria Analítica",
+        type: "FIXED_FORMULA",
+        latex: "y^2 = 2px",
+        computable: {
+            "y": "sqrt(2 * p * x)",
+            "x": "y^2 / (2 * p)"
+        },
+        variables: {
+            "y": { name: "Coordenada y (+)", si_unit: "" },
+            "x": { name: "Coordenada x", si_unit: "" },
+            "p": { name: "Parâmetro p", si_unit: "" }
+        },
+        description: "Equação reduzida da parábola (eixo horizontal)."
+    },
+    {
+        id: "newton_binomial",
+        name: "Binômio de Newton",
+        category: "Matemática: Combinatória",
+        type: "DYNAMIC_STRUCTURE",
+        latex: "(a+b)^n",
+        computable: {
+            "res": "(a + b)^n"
+        },
+        variables: {
+            "res": { name: "Resultado", si_unit: "" },
+            "a": { name: "Termo a", si_unit: "" },
+            "b": { name: "Termo b", si_unit: "" },
+            "n": { name: "Expoente n", si_unit: "" }
+        },
+        description: "Expansão binomial."
+    },
+    {
+        id: "moivre_formula",
+        name: "Fórmula de Moivre",
+        category: "Matemática: Complexos",
+        type: "DYNAMIC_STRUCTURE",
+        latex: "z^n = \\rho^n [\\cos(n\\theta) + i\\sin(n\\theta)]",
+        computable: {
+            "rho_n": "rho^n",
+            "theta_n": "n * theta"
+        },
+        variables: {
+            "rho_n": { name: "Módulo Final", si_unit: "" },
+            "theta_n": { name: "Ângulo Final (rad)", si_unit: "rad" },
+            "rho": { name: "Módulo Inicial (ρ)", si_unit: "" },
+            "theta": { name: "Ângulo Inicial (rad)", si_unit: "rad" },
+            "n": { name: "Expoente n", si_unit: "" }
+        },
+        description: "Potência de um número complexo."
+    }
+    // ============================================================
+    // GEOMETRIA PLANA - ÁREAS E RELAÇÕES
+    // ============================================================
+    ,{
+        id: "heron_formula",
+        name: "Fórmula de Heron",
+        category: "Matemática: Geometria Plana",
+        type: "FIXED_FORMULA",
+        latex: "A = \\sqrt{s(s-a)(s-b)(s-c)}",
+        computable: {
+            "A": "sqrt(s*(s-a)*(s-b)*(s-c))"
+        },
+        variables: {
+            "A": { name: "Área", si_unit: "m^2" },
+            "s": { name: "Semiperímetro", si_unit: "m" },
+            "a": { name: "Lado a", si_unit: "m" },
+            "b": { name: "Lado b", si_unit: "m" },
+            "c": { name: "Lado c", si_unit: "m" }
+        },
+        description: "Área do triângulo pelos lados."
+    },
+    // ============================================================
+    // TRIGONOMETRIA AVANÇADA
+    // ============================================================
+    {
+        id: "trig_tan_func",
+        name: "Tangente (Triângulo)",
+        category: "Matemática: Trigonometria",
+        latex: "\\tan(B) = \\frac{b}{c}",
+        computable: {
+            "tanB": "b / c",
+            "b": "tanB * c",
+            "c": "b / tanB"
+        },
+        variables: {
+            "tanB": { name: "Tangente B", si_unit: "" },
+            "b": { name: "Cateto oposto", si_unit: "m" },
+            "c": { name: "Cateto adjacente", si_unit: "m" }
+        },
+        description: "Tangente a partir dos catetos."
+    },
+    {
+        id: "trig_cot_func",
+        name: "Cotangente",
+        category: "Matemática: Trigonometria",
+        latex: "\\cot(x) = \\frac{\\cos(x)}{\\sin(x)}",
+        computable: {
+            "cotx": "cos(x) / sin(x)",
+            "x": "acot(cotx)"
+        },
+        variables: {
+            "cotx": { name: "Cotangente", si_unit: "" },
+            "x": { name: "Ângulo (rad)", si_unit: "rad" }
+        },
+        description: "Cotangente de um ângulo."
+    },
+    {
+        id: "trig_identity_fundamental",
+        name: "Identidade Fundamental",
+        category: "Matemática: Trigonometria",
+        latex: "\\sin^2(x) + \\cos^2(x) = 1",
+        computable: {
+            "sin2": "1 - cos2",
+            "cos2": "1 - sin2"
+        },
+        variables: {
+            "sin2": { name: "Seno ao quadrado", si_unit: "" },
+            "cos2": { name: "Cosseno ao quadrado", si_unit: "" }
+        },
+        description: "Relação fundamental da trigonometria."
+    },
+    {
+        id: "trig_identity_tan",
+        name: "Identidade da Tangente",
+        category: "Matemática: Trigonometria",
+        latex: "\\tan^2(x) + 1 = \\sec^2(x)",
+        computable: {
+            "tan2": "sec2 - 1",
+            "sec2": "tan2 + 1"
+        },
+        variables: {
+            "tan2": { name: "Tangente ao quadrado", si_unit: "" },
+            "sec2": { name: "Secante ao quadrado", si_unit: "" }
+        },
+        description: "Relação entre tangente e secante."
+    },
+    {
+        id: "trig_identity_cot",
+        name: "Identidade da Cotangente",
+        category: "Matemática: Trigonometria",
+        latex: "\\cot^2(x) + 1 = \\csc^2(x)",
+        computable: {
+            "cot2": "csc2 - 1",
+            "csc2": "cot2 + 1"
+        },
+        variables: {
+            "cot2": { name: "Cotangente ao quadrado", si_unit: "" },
+            "csc2": { name: "Cossecante ao quadrado", si_unit: "" }
+        },
+        description: "Relação entre cotangente e cossecante."
+    },
+    {
+        id: "trig_sin_sum",
+        name: "Seno da Soma",
+        category: "Matemática: Trigonometria",
+        latex: "\\sin(a+b) = \\sin a \\cos b + \\sin b \\cos a",
+        computable: {
+            "sin_ab": "sinA * cosB + sinB * cosA"
+        },
+        variables: {
+            "sin_ab": { name: "sen(a+b)", si_unit: "" },
+            "sinA": { name: "sen(a)", si_unit: "" },
+            "cosA": { name: "cos(a)", si_unit: "" },
+            "sinB": { name: "sen(b)", si_unit: "" },
+            "cosB": { name: "cos(b)", si_unit: "" }
+        },
+        description: "Seno da soma de dois arcos."
+    },
+    {
+        id: "trig_sin_diff",
+        name: "Seno da Diferença",
+        category: "Matemática: Trigonometria",
+        latex: "\\sin(a-b) = \\sin a \\cos b - \\sin b \\cos a",
+        computable: {
+            "sin_ab": "sinA * cosB - sinB * cosA"
+        },
+        variables: {
+            "sin_ab": { name: "sen(a-b)", si_unit: "" },
+            "sinA": { name: "sen(a)", si_unit: "" },
+            "cosA": { name: "cos(a)", si_unit: "" },
+            "sinB": { name: "sen(b)", si_unit: "" },
+            "cosB": { name: "cos(b)", si_unit: "" }
+        },
+        description: "Seno da diferença de dois arcos."
+    },
+    {
+        id: "trig_cos_sum",
+        name: "Cosseno da Soma",
+        category: "Matemática: Trigonometria",
+        latex: "\\cos(a+b) = \\cos a \\cos b - \\sin a \\sin b",
+        computable: {
+            "cos_ab": "cosA * cosB - sinA * sinB"
+        },
+        variables: {
+            "cos_ab": { name: "cos(a+b)", si_unit: "" },
+            "sinA": { name: "sen(a)", si_unit: "" },
+            "cosA": { name: "cos(a)", si_unit: "" },
+            "sinB": { name: "sen(b)", si_unit: "" },
+            "cosB": { name: "cos(b)", si_unit: "" }
+        },
+        description: "Cosseno da soma de dois arcos."
+    },
+    {
+        id: "trig_cos_diff",
+        name: "Cosseno da Diferença",
+        category: "Matemática: Trigonometria",
+        latex: "\\cos(a-b) = \\cos a \\cos b + \\sin a \\sin b",
+        computable: {
+            "cos_ab": "cosA * cosB + sinA * sinB"
+        },
+        variables: {
+            "cos_ab": { name: "cos(a-b)", si_unit: "" },
+            "sinA": { name: "sen(a)", si_unit: "" },
+            "cosA": { name: "cos(a)", si_unit: "" },
+            "sinB": { name: "sen(b)", si_unit: "" },
+            "cosB": { name: "cos(b)", si_unit: "" }
+        },
+        description: "Cosseno da diferença de dois arcos."
+    },
+    {
+        id: "trig_tan_sum",
+        name: "Tangente da Soma",
+        category: "Matemática: Trigonometria",
+        latex: "\\tan(a+b) = \\frac{\\tan a + \\tan b}{1 - \\tan a \\tan b}",
+        computable: {
+            "tan_ab": "(tanA + tanB) / (1 - tanA * tanB)"
+        },
+        variables: {
+            "tan_ab": { name: "tg(a+b)", si_unit: "" },
+            "tanA": { name: "tg(a)", si_unit: "" },
+            "tanB": { name: "tg(b)", si_unit: "" }
+        },
+        description: "Tangente da soma de dois arcos."
+    },
+    {
+        id: "trig_tan_diff",
+        name: "Tangente da Diferença",
+        category: "Matemática: Trigonometria",
+        latex: "\\tan(a-b) = \\frac{\\tan a - \\tan b}{1 + \\tan a \\tan b}",
+        computable: {
+            "tan_ab": "(tanA - tanB) / (1 + tanA * tanB)"
+        },
+        variables: {
+            "tan_ab": { name: "tg(a-b)", si_unit: "" },
+            "tanA": { name: "tg(a)", si_unit: "" },
+            "tanB": { name: "tg(b)", si_unit: "" }
+        },
+        description: "Tangente da diferença de dois arcos."
+    },
+    // ============================================================
+    // PROBABILIDADE
+    // ============================================================
+    {
+        id: "probability_mutually_exclusive",
+        name: "Probabilidade (Mutuamente Exclusivos)",
+        category: "Matemática: Probabilidade",
+        latex: "P(A \\cup B) = P(A) + P(B)",
+        computable: {
+            "Pu": "Pa + Pb",
+            "Pa": "Pu - Pb",
+            "Pb": "Pu - Pa"
+        },
+        variables: {
+            "Pu": { name: "P(A ∪ B)", si_unit: "" },
+            "Pa": { name: "P(A)", si_unit: "" },
+            "Pb": { name: "P(B)", si_unit: "" }
+        },
+        description: "Probabilidade da união de eventos mutuamente exclusivos."
+    },
+    {
+        id: "probability_independent",
+        name: "Probabilidade (Independência)",
+        category: "Matemática: Probabilidade",
+        latex: "P(A \\cap B) = P(A) \\cdot P(B)",
+        computable: {
+            "Pi": "Pa * Pb",
+            "Pa": "Pi / Pb",
+            "Pb": "Pi / Pa"
+        },
+        variables: {
+            "Pi": { name: "P(A ∩ B)", si_unit: "" },
+            "Pa": { name: "P(A)", si_unit: "" },
+            "Pb": { name: "P(B)", si_unit: "" }
+        },
+        description: "Probabilidade da interseção de eventos independentes."
+    },
+    // ============================================================
+    // GEOMETRIA ESPACIAL (ÁREAS FALTANTES)
+    // ============================================================
+    {
+        id: "cylinder_area_lateral",
+        name: "Área Lateral do Cilindro",
+        category: "Matemática: Geometria Espacial",
+        latex: "A_L = 2\\pi R h",
+        computable: {
+            "AL": "2 * pi * R * h",
+            "R": "AL / (2 * pi * h)",
+            "h": "AL / (2 * pi * R)"
+        },
+        variables: {
+            "AL": { name: "Área Lateral", si_unit: "m^2" },
+            "R": { name: "Raio", si_unit: "m" },
+            "h": { name: "Altura", si_unit: "m" }
+        },
+        description: "Área lateral de cilindro circular reto."
+    },
+    {
+        id: "cylinder_area_base",
+        name: "Área da Base do Cilindro / Cone",
+        category: "Matemática: Geometria Espacial",
+        latex: "A_B = \\pi R^2",
+        computable: {
+            "AB": "pi * R^2",
+            "R": "sqrt(AB / pi)"
+        },
+        variables: {
+            "AB": { name: "Área da Base", si_unit: "m^2" },
+            "R": { name: "Raio", si_unit: "m" }
+        },
+        description: "Área da base circular."
+    },
+    {
+        id: "cylinder_area_total",
+        name: "Área Total do Cilindro",
+        category: "Matemática: Geometria Espacial",
+        latex: "A_T = 2\\pi R (h + R)",
+        computable: {
+            "AT": "2 * pi * R * (h + R)"
+        },
+        variables: {
+            "AT": { name: "Área Total", si_unit: "m^2" },
+            "R": { name: "Raio", si_unit: "m" },
+            "h": { name: "Altura", si_unit: "m" }
+        },
+        description: "Área total do cilindro."
+    },
+    {
+        id: "cone_area_lateral",
+        name: "Área Lateral do Cone",
+        category: "Matemática: Geometria Espacial",
+        latex: "A_L = \\pi R g",
+        computable: {
+            "AL": "pi * R * g",
+            "R": "AL / (pi * g)",
+            "g": "AL / (pi * R)"
+        },
+        variables: {
+            "AL": { name: "Área Lateral", si_unit: "m^2" },
+            "R": { name: "Raio", si_unit: "m" },
+            "g": { name: "Geratriz", si_unit: "m" }
+        },
+        description: "Área lateral do cone."
+    },
+    {
+        id: "cone_area_total",
+        name: "Área Total do Cone",
+        category: "Matemática: Geometria Espacial",
+        latex: "A_T = \\pi R (g + R)",
+        computable: {
+            "AT": "pi * R * (g + R)"
+        },
+        variables: {
+            "AT": { name: "Área Total", si_unit: "m^2" },
+            "R": { name: "Raio", si_unit: "m" },
+            "g": { name: "Geratriz", si_unit: "m" }
+        },
+        description: "Área total do cone."
+    },
+    {
+        id: "cone_frustum_area_lateral",
+        name: "Área Lateral do Tronco de Cone",
+        category: "Matemática: Geometria Espacial",
+        latex: "A_L = \\pi g (R + r)",
+        computable: {
+            "AL": "pi * g * (R + r)",
+            "g": "AL / (pi * (R + r))"
+        },
+        variables: {
+            "AL": { name: "Área Lateral", si_unit: "m^2" },
+            "g": { name: "Geratriz", si_unit: "m" },
+            "R": { name: "Raio Maior", si_unit: "m" },
+            "r": { name: "Raio Menor", si_unit: "m" }
+        },
+        description: "Área lateral do tronco de cone."
+    },
+    // ============================================================
+    // GEOMETRIA ANALÍTICA
+    // ============================================================
+    {
+        id: "line_eq_general",
+        name: "Reta Geral",
+        category: "Matemática: Geometria Analítica",
+        latex: "ax + by + c = 0",
+        computable: {
+            "c": "-(a * x + b * y)",
+            "y": "-(a * x + c) / b",
+            "x": "-(b * y + c) / a"
+        },
+        variables: {
+            "x": { name: "x", si_unit: "" },
+            "y": { name: "y", si_unit: "" },
+            "a": { name: "a", si_unit: "" },
+            "b": { name: "b", si_unit: "" },
+            "c": { name: "c", si_unit: "" }
+        },
+        description: "Equação geral da reta."
+    },
+    {
+        id: "line_eq_reduced",
+        name: "Reta Reduzida",
+        category: "Matemática: Geometria Analítica",
+        latex: "y = mx + b",
+        computable: {
+            "y": "m * x + b",
+            "x": "(y - b) / m",
+            "m": "(y - b) / x",
+            "b": "y - m * x"
+        },
+        variables: {
+            "y": { name: "y", si_unit: "" },
+            "x": { name: "x", si_unit: "" },
+            "m": { name: "Coef. Angular (m)", si_unit: "" },
+            "b": { name: "Coef. Linear (b)", si_unit: "" }
+        },
+        description: "Equação reduzida da reta."
+    },
+    {
+        id: "line_eq_segmentary",
+        name: "Reta Segmentária",
+        category: "Matemática: Geometria Analítica",
+        latex: "\\frac{x}{a} + \\frac{y}{b} = 1",
+        computable: {
+            "y": "b * (1 - (x / a))",
+            "x": "a * (1 - (y / b))"
+        },
+        variables: {
+            "x": { name: "x", si_unit: "" },
+            "y": { name: "y", si_unit: "" },
+            "a": { name: "Intercepto a (x)", si_unit: "" },
+            "b": { name: "Intercepto b (y)", si_unit: "" }
+        },
+        description: "Equação segmentária da reta."
+    },
+    {
+        id: "line_angle",
+        name: "Ângulo Entre Retas",
+        category: "Matemática: Geometria Analítica",
+        latex: "\\tan \\theta = \\left| \\frac{m_2 - m_1}{1 + m_1 m_2} \\right|",
+        computable: {
+            "tan_theta": "abs((m2 - m1) / (1 + m1 * m2))",
+            "theta": "atan(abs((m2 - m1) / (1 + m1 * m2)))"
+        },
+        variables: {
+            "tan_theta": { name: "Tangente Ângulo", si_unit: "" },
+            "theta": { name: "Ângulo (rad)", si_unit: "rad" },
+            "m1": { name: "Coef. Reta 1", si_unit: "" },
+            "m2": { name: "Coef. Reta 2", si_unit: "" }
+        },
+        description: "Tangente do ângulo agudo entre duas retas."
+    },
+    {
+        id: "circle_normal_form",
+        name: "Forma Normal da Circunferência",
+        category: "Matemática: Geometria Analítica",
+        latex: "x^2 + y^2 - 2x_c x - 2y_c y + c = 0",
+        computable: {
+            "c": "-(x^2 + y^2 - 2 * xc * x - 2 * yc * y)"
+        },
+        variables: {
+            "x": { name: "x", si_unit: "" },
+            "y": { name: "y", si_unit: "" },
+            "xc": { name: "x do centro", si_unit: "" },
+            "yc": { name: "y do centro", si_unit: "" },
+            "c": { name: "c (xc^2+yc^2-R^2)", si_unit: "" }
+        },
+        description: "Forma normal (geral) da circunferência."
     }
 
 ];
