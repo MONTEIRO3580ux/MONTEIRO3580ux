@@ -1,16 +1,15 @@
-## Hi there 👋
+## Olá! 👋
 
-<!--
-**MONTEIRO3580ux/MONTEIRO3580ux** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+Sou estudante interessado em tecnologia, programação, Física e Matemática. Gosto de transformar ideias em projetos práticos, explorar soluções e compreender como as coisas funcionam.
 
-Here are some ideas to get you started:
+- 🔭 Atualmente desenvolvendo o **QUANTIS**, uma ferramenta de computação científica para conversões de unidades, resolução de fórmulas e análise dimensional.
+- 🌱 Estudando programação, Física, Matemática e fundamentos de computação científica.
+- 🧠 Tenho interesse em engenharia aeroespacial, astrofísica, simulações computacionais e desenvolvimento de software.
+- 👯 Tenho interesse em colaborar com projetos de tecnologia, ciência e código aberto.
+- 💬 Pode conversar comigo sobre Física, Matemática, programação e tecnologia.
+- ⚡ Curiosidade: gosto de transformar conceitos científicos em ferramentas computacionais. Um dos meus projetos é o QUANTIS — **Além dos cálculos.**
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+### 🚀 Projetos em desenvolvimento
+
+- **QUANTIS:** ambiente de computação científica com conversão automática de unidades, análise dimensional e resolução passo a passo de fórmulas.
+- **AURORA:** projeto de assistente pessoal baseado em modelos de linguagem, desenvolvido com foco em autonomia e personalização.
